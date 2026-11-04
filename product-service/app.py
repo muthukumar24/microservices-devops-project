@@ -9,9 +9,6 @@ products = [
     {"id": 2, "name": "Mobile", "price": 20000}
 ]
 
-@app.get("/health")
-def health():
-    return jsonify(service="product-service", status="ok", version="1.0")
 
 # Home endpoint
 @app.route("/")

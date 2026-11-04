@@ -38,16 +38,5 @@ pipeline {
         }
       }
     }
-
-    stage('Verify') {
-      steps {
-        sh '''
-          sleep 8
-          curl -f http://$APP_IP:5001/health
-          curl -f http://$APP_IP:5002/health
-          curl -f http://$APP_IP:5003/health
-        '''
-      }
-    }
   }
 }

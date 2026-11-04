@@ -9,9 +9,6 @@ users = [
     {"id": 2, "name": "David", "email": "david@gmail.com"}
 ]
 
-@app.get("/health")
-def health():
-    return jsonify(service="user-service", status="ok", version="1.0")
 
 # Home endpoint
 @app.route("/")
