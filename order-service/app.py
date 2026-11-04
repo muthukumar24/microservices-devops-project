@@ -9,6 +9,10 @@ orders = [
     {"id": 2, "user_id": 2, "product_id": 2, "quantity": 1}
 ]
 
+@app.get("/health")
+def health():
+    return jsonify(service="order-service", status="ok", version="1.0")
+
 # Home endpoint
 @app.route("/")
 def home():
