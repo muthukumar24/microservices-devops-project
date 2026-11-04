@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {
-        APP_HOST = 'ubuntu@YOUR_EC2_PUBLIC_IP'
+        APP_HOST = 'ubuntu@3.108.30.181'
         REMOTE_DIR = '/opt/microservices'
     }
 
