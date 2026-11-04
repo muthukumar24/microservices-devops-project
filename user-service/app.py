@@ -10,11 +10,6 @@ users = [
 ]
 
 
-# Home endpoint
-@app.route("/")
-def home():
-    return jsonify({"message": "Welcome to User Service"})
-
 # Get all users
 @app.route("/users", methods=["GET"])
 def get_users():
