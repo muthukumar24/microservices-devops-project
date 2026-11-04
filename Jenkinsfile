@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    APP_HOST = 'ubuntu@16.112.141.170'
-    APP_IP   = '16.112.141.170'
+    APP_HOST = 'ubuntu@3.108.30.181'
+    APP_IP   = '3.108.30.181'
   }
 
   stages {
