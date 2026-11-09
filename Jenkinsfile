@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    APP_HOST = 'ubuntu@3.108.30.181'
-    APP_IP   = '3.108.30.181'
+    APP_HOST = 'ubuntu@13.233.160.169'
+    APP_IP   = '13.233.160.169'
   }
 
   stages {
@@ -19,21 +19,43 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
-      steps {
-        sshagent(['ec2-ssh-key']) {
-          sh '''
-            rsync -az --delete --exclude .git -e "ssh -o StrictHostKeyChecking=no" ./ $APP_HOST:~/app/
+  stage('Deploy') {
+    steps {
+      sshagent(['ec2-ssh-key']) {
+        sh '''
+            rsync -az --delete --exclude .git --exclude venv \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./ $APP_HOST:~/app/
+
             ssh -o StrictHostKeyChecking=no $APP_HOST '
               cd ~/app
+
               python3 -m venv venv
-              venv/bin/pip install -q -r user-service/requirements.txt -r product-service/requirements.txt -r order-service/requirements.txt
-              pm2 delete all || true
-              pm2 start user-service/app.py       --name user-service    --interpreter $HOME/app/venv/bin/python
-              pm2 start product-service/app.py --name product-service --interpreter $HOME/app/venv/bin/python
-              pm2 start order-service/app.py     --name order-service   --interpreter $HOME/app/venv/bin/python
+
+              venv/bin/pip install -q \
+                -r user-service/requirements.txt \
+                -r product-service/requirements.txt \
+                -r order-service/requirements.txt
+
+              pm2 restart user-service || \
+                pm2 start user-service/app.py \
+                --name user-service \
+                --interpreter $HOME/app/venv/bin/python
+
+              pm2 restart product-service || \
+                pm2 start product-service/app.py \
+                --name product-service \
+                --interpreter $HOME/app/venv/bin/python
+
+              pm2 restart order-service || \
+                pm2 start order-service/app.py \
+                --name order-service \
+                --interpreter $HOME/app/venv/bin/python
+
               pm2 save
-            '
+
+              pm2 status
+              '
           '''
         }
       }
